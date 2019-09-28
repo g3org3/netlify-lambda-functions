@@ -1,6 +1,6 @@
-// if (process.env.NODE_ENV === 'development') require('dotenv').config()
+require('dotenv').config()
 
-const { sendMailgunNotification } = require('./util')
+const { sendMailgunNotification } = require('../util')
 exports.handler = (event, context, callback) => {
   if (!isValidMailgunEvent(event))
     return callback(null, { statusCode: 400, body: 'bad-request' })
