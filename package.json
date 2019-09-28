@@ -4,6 +4,7 @@
   "description": "",
   "main": "src/mailgun.js",
   "scripts": {
+    "preinstall": "cp env.example .env",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "netlify-lambda serve src/lambdas/",
     "build": "netlify-lambda build src/lambdas/"
