@@ -8,17 +8,17 @@ if (!process.env.SLACK_TOKEN) throw Error('env SLACK_TOKEN not found')
 if (!process.env.SLACK_CHANNEL) throw Error('env SLACK_CHANNEL not found')
 
 function getParams(mailgunPayload) {
-  const eventData = mailgunPayload['event-data']
-  const { message, recipient, event } = eventData || {}
+  const eventData = mailgunPayload['event-data'] || {}
+  const { message, recipient, event } = eventData
   const { to, from, subject } = message.headers || {}
   const logLevel = eventData['log-level'].toUpperCase()
   const text = `[${logLevel}][${event}] to: ${recipient} - subject: ${subject}`
 
-  return { to, from, event, text, subject, logLevel, recipient }
+  return { to, from, eventData, event, text, subject, logLevel, recipient }
 }
 
 function sendMailgunNotification(mailgunPayload = {}) {
-  const { logLevel, event, recipient, subject, text } = getParams(
+  const { logLevel, eventData, event, recipient, subject, text } = getParams(
     mailgunPayload
   )
 
@@ -43,13 +43,27 @@ function sendMailgunNotification(mailgunPayload = {}) {
   }
   const formattedEvent = events[logLevel + event] || event
   const color = colors[logLevel + event] || colors[logLevel]
+
+  let clientInfo = ''
+
+  if (eventData['client-info']) {
+    const os = eventData['client-info']['client-os']
+    const { country, city } = eventData.geolocation || {}
+    clientInfo = ` | ${os} - ${city}, ${country}`
+  }
+
+  const clickInfo = ''
+  if (eventData.url) {
+    clientInfo = ` *url:* ${eventData.url}`
+  }
+
   const attachments = JSON.stringify([
     {
       fallback: text,
       color,
       title: `${emoji[event] || ''} ${formattedEvent}`,
-      text: `*To:* ${recipient}${formattedSubject}`,
-      footer: 'Mailgun API',
+      text: `*To:* ${recipient}${formattedSubject}${clickInfo}`,
+      footer: `Mailgun API${clientInfo}`,
       footer_icon: 'http://wwwhere.io/img/thumbs/mailgun.jpg',
     },
   ])
