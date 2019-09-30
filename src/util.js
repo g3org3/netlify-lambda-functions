@@ -54,7 +54,7 @@ function sendMailgunNotification(mailgunPayload = {}) {
 
   let clickInfo = ''
   if (eventData.url) {
-    clickInfo = ` *url:* ${eventData.url}`
+    clickInfo = ` *Url:* ${eventData.url}`
   }
 
   const attachments = JSON.stringify([
