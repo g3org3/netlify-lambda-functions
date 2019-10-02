@@ -1,7 +1,8 @@
 require('dotenv').config()
 
 const { sendMailgunNotification } = require('../util')
-if (!process.env.SLACK_CHANNEL) throw Error('env SLACK_CHANNEL not found')
+if (!process.env.SLACK_CHANNEL_STAGING)
+  throw Error('env SLACK_CHANNEL_STAGING not found')
 
 exports.handler = (event, context, callback) => {
   if (!isValidMailgunEvent(event))
@@ -10,7 +11,7 @@ exports.handler = (event, context, callback) => {
   const { body } = event
   const mailgunPayload = JSON.parse(body)
 
-  sendMailgunNotification(process.env.SLACK_CHANNEL, mailgunPayload)
+  sendMailgunNotification(process.env.SLACK_CHANNEL_STAGING, mailgunPayload)
     .then(r => {
       callback(null, {
         statusCode: 200,

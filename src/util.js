@@ -5,7 +5,6 @@ const fetch = require('./fetch')
 exports.sendMailgunNotification = sendMailgunNotification
 
 if (!process.env.SLACK_TOKEN) throw Error('env SLACK_TOKEN not found')
-if (!process.env.SLACK_CHANNEL) throw Error('env SLACK_CHANNEL not found')
 
 function getParams(mailgunPayload) {
   const eventData = mailgunPayload['event-data'] || {}
@@ -17,7 +16,7 @@ function getParams(mailgunPayload) {
   return { to, from, eventData, event, text, subject, logLevel, recipient }
 }
 
-function sendMailgunNotification(mailgunPayload = {}) {
+function sendMailgunNotification(slackChannel, mailgunPayload = {}) {
   const {
     logLevel,
     from,
@@ -78,7 +77,7 @@ function sendMailgunNotification(mailgunPayload = {}) {
     },
   ])
 
-  return sendSlackMessage(process.env.SLACK_CHANNEL, '', attachments)
+  return sendSlackMessage(slackChannel, '', attachments)
 }
 
 function sendSlackMessage(channel, text, attachments) {
