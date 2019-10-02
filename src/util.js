@@ -63,7 +63,9 @@ function sendMailgunNotification(mailgunPayload = {}) {
     clickInfo = ` *Url:* ${eventData.url}`
   }
 
-  const fromInfo = from ? ` *From:* ${from}` : ''
+  const fromInfo = from
+    ? ` *From:* ${from.split('<')[0]} : ${from.split('<')[1].split('@')[0]}`
+    : ''
 
   const attachments = JSON.stringify([
     {
