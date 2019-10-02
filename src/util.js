@@ -18,9 +18,15 @@ function getParams(mailgunPayload) {
 }
 
 function sendMailgunNotification(mailgunPayload = {}) {
-  const { logLevel, eventData, event, recipient, subject, text } = getParams(
-    mailgunPayload
-  )
+  const {
+    logLevel,
+    from,
+    eventData,
+    event,
+    recipient,
+    subject,
+    text,
+  } = getParams(mailgunPayload)
 
   const colors = {
     INFO: '#00BCD4',
@@ -57,13 +63,15 @@ function sendMailgunNotification(mailgunPayload = {}) {
     clickInfo = ` *Url:* ${eventData.url}`
   }
 
+  const fromInfo = from ? ` *From:* ${from}` : ''
+
   const attachments = JSON.stringify([
     {
       fallback: text,
       color,
       title: `${emoji[event] || ''} ${formattedEvent}`,
       text: `*To:* ${recipient}${formattedSubject}${clickInfo}`,
-      footer: `Mailgun API${clientInfo}`,
+      footer: `Mailgun API${clientInfo}${fromInfo}`,
       footer_icon: 'http://wwwhere.io/img/thumbs/mailgun.jpg',
     },
   ])
