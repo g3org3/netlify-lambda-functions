@@ -51,7 +51,7 @@ function sendMailgunNotification(slackChannel, mailgunPayload = {}) {
 
   let clientInfo = ''
 
-  if (eventData['client-info']) {
+  if (eventData['client-info'] && event !== 'opened') {
     const os = eventData['client-info']['client-os']
     const { country, city } = eventData.geolocation || {}
     clientInfo = ` | ${os} - ${city}, ${country}`
