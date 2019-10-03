@@ -8,7 +8,7 @@ module.exports = sendSlackMessage
  * @param {string} channel
  * @param {string} text
  *
- * @returns {Promise<any>}
+ * @returns {Promise<Fetch>}
  */
 function sendSlackMessage(token, channel, text = '') {
   if (!token) throw new Error('Token not found')
