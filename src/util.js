@@ -1,8 +1,5 @@
 const sendSlackMessage = require('./slack')
 
-// list of exports
-exports.sendMailgunNotification = sendMailgunNotification
-
 function getParams(mailgunPayload) {
   const eventData = mailgunPayload['event-data'] || {}
   const { message, recipient, event } = eventData
@@ -12,7 +9,10 @@ function getParams(mailgunPayload) {
   return { to, from, eventData, event, subject, logLevel, recipient }
 }
 
-function sendMailgunNotification(slackConfig = {}, mailgunPayload = {}) {
+exports.sendMailgunNotification = function(
+  slackConfig = {},
+  mailgunPayload = {}
+) {
   const { logLevel, from, eventData, event, recipient, subject } = getParams(
     mailgunPayload
   )
