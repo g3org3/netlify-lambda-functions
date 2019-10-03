@@ -1,6 +1,7 @@
 require('dotenv').config()
 
 const { sendMailgunNotification } = require('../util')
+if (!process.env.SLACK_TOKEN) throw Error('env SLACK_TOKEN not found')
 if (!process.env.SLACK_CHANNEL) throw Error('env SLACK_CHANNEL not found')
 
 exports.handler = (event, context, callback) => {
@@ -9,8 +10,11 @@ exports.handler = (event, context, callback) => {
 
   const { body } = event
   const mailgunPayload = JSON.parse(body)
-
-  sendMailgunNotification(process.env.SLACK_CHANNEL, mailgunPayload)
+  const slackConfig = {
+    token: process.env.SLACK_TOKEN,
+    channel: process.env.SLACK_CHANNEL,
+  }
+  sendMailgunNotification(slackConfig, mailgunPayload)
     .then(r => {
       callback(null, {
         statusCode: 200,
