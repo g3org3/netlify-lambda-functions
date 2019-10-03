@@ -2,7 +2,7 @@ require('dotenv').config()
 
 const debug = require('../debug')
 const { sendMailgunNotification } = require('../util')
-const { isValidMailgunRequest } = require('./verify-request')
+const { isValidMailgunRequest } = require('../verify-request')
 
 if (!process.env.SLACK_TOKEN) throw Error('env SLACK_TOKEN not found')
 if (!process.env.SLACK_CHANNEL) throw Error('env SLACK_CHANNEL not found')
