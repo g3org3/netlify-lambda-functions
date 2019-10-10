@@ -7,6 +7,6 @@ module.exports = {
   staging: {
     token: process.env.SLACK_TOKEN,
     channel: process.env.SLACK_CHANNEL_STAGING,
-    error_channel: process.env.SLACK_CHANNEL_ERROR_STAGING,
+    error_channel: process.env.SLACK_CHANNEL_STAGING_ERROR,
   },
 }
