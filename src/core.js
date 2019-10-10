@@ -14,6 +14,11 @@ const events = {
   warnfailed: 'temporary-fail',
 }
 
+const getEmoji = (event, logLevel) => {
+  const logLevelEvent = events[logLevel + event] || event
+  return emojis[logLevelEvent]
+}
+
 exports.sendMailgunNotification = (slackConfig = {}, mailgunPayload = {}) => {
   const eventData = mailgunPayload['event-data'] || {}
   const {
@@ -24,7 +29,6 @@ exports.sendMailgunNotification = (slackConfig = {}, mailgunPayload = {}) => {
     event,
   } = eventData
   const logLevel = eventData['log-level'].toLowerCase()
-  const logLevelEvent = events[logLevel + event] || event
 
   const subjectInfo = subject ? ` *Subject:* ${subject}` : ''
 
@@ -46,7 +50,7 @@ exports.sendMailgunNotification = (slackConfig = {}, mailgunPayload = {}) => {
       }\``
     : ''
 
-  const emoji = emojis[logLevelEvent]
+  const emoji = getEmoji(event, logLevel)
   const toInfo = ` *To:* \`${recipient}\``
 
   const messageText =
