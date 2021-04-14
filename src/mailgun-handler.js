@@ -1,5 +1,4 @@
 require('dotenv').config()
-const debug = require('./debug')
 const { sendMailgunNotification } = require('./core')
 const { isValidMailgunRequest } = require('./verify-request')
 
@@ -13,7 +12,7 @@ module.exports = slackConfig => (event, context, callback) => {
       body: 'ok',
     })
 
-  debug(JSON.parse(event.body))
+  console.log(event.body)
 
   sendMailgunNotification(slackConfig, JSON.parse(event.body))
     .then(success)
