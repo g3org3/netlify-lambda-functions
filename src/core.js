@@ -30,7 +30,7 @@ exports.sendMailgunNotification = (slackConfig = {}, mailgunPayload = {}) => {
   } = eventData
   const logLevel = eventData['log-level'].toLowerCase()
 
-  const subjectInfo = subject ? ` *Subject:* ${subject}` : ''
+  const subjectInfo = subject ? ` *S:* \`${subject}\`` : ''
 
   let clientInfo = ''
   if (eventData['client-info'] && event !== 'opened') {
@@ -44,19 +44,26 @@ exports.sendMailgunNotification = (slackConfig = {}, mailgunPayload = {}) => {
     clickInfo = ` *Url:* ${eventData.url}`
   }
 
-  const fromInfo = from
-    ? ` *From:* \`${from.split('<')[0]}\` *Hash:* \`${
-        from.split('<')[1].split('@')[0]
-      }\``
-    : ''
+  const fromText = from ? from.split('via FFYN')[0].trim() : ''
+  const fromInfo = `\`${fromText}\` :arrow_right: `
+
+  const userVariables = eventData['user-variables'] || {}
+  const replyToEmailHash = userVariables.replyToEmailHash
+  const hashText = replyToEmailHash ? replyToEmailHash.split('@')[0] : null
+  const hashInfo = hashText ? ` *H:* \`${hashText}\`` : ''
+
+  const tags = eventData.tags || []
+  const tagsInfo = tags.length > 0 ? ` *Tag:* \`${tags.join(', ')}\`` : ''
 
   const emoji = getEmoji(event, logLevel)
-  const toInfo = ` *To:* \`${recipient}\``
+  const toInfo = ` \`${recipient}\``
 
   const messageText =
-    `${emoji} *${event}:*` +
-    toInfo +
+    `${emoji} ` +
     fromInfo +
+    toInfo +
+    hashInfo +
+    tagsInfo +
     subjectInfo +
     clickInfo +
     clientInfo
